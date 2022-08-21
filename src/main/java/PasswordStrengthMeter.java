@@ -1,12 +1,31 @@
 public class PasswordStrengthMeter {
     public PasswordStrength meter(String password) {
         if (password == null || password.isEmpty()) return PasswordStrength.INVALID;
-        if (password.length() < 8) {
-            return PasswordStrength.NORMAL;
-        }
+        int metCounts = getMetCounts(password);
 
-        if (!meetsContainingNumberCriteria(password)) return PasswordStrength.NORMAL;
+        if (metCounts <= 1) return PasswordStrength.WEAK;
+        if (metCounts == 2) return PasswordStrength.NORMAL;
+
         return PasswordStrength.STRONG;
+    }
+
+    private int getMetCounts(String password) {
+        int metCounts = 0;
+
+        if (password.length() >= 8) metCounts++;
+        if (meetsContainingNumberCriteria(password)) metCounts++;
+        if (meetsContainingUppercaseCriteria(password)) metCounts++;
+        return metCounts;
+    }
+
+    private static boolean meetsContainingUppercaseCriteria(String password) {
+        boolean containsUpp = false;
+        for (char ch : password.toCharArray()) {
+            if(Character.isUpperCase(ch)) {
+                containsUpp = true;
+            }
+        }
+        return containsUpp;
     }
 
     private boolean meetsContainingNumberCriteria(String password) {
