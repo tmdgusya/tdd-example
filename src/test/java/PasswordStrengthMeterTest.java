@@ -9,24 +9,23 @@ public class PasswordStrengthMeterTest {
 
     @Test
     void meetsAllCriteria_Then_Strong() {
-        var result = meter.meter("ab12!@AB");
-        assertEquals(PasswordStrength.STRONG, result);
-        var resul2 = meter.meter("abc!Add1");
-        assertEquals(PasswordStrength.STRONG, resul2);
+        assertStrength("ab12!@AB", PasswordStrength.STRONG);
+        assertStrength("abc!Add1", PasswordStrength.STRONG);
     }
 
     @Test
     void meetsOtherCriteria_except_for_Length_Then_Normal() {
-        PasswordStrength result = meter.meter("ab12!@A");
-        assertEquals(PasswordStrength.NORMAL, result);
+        assertStrength("ab12!@A", PasswordStrength.NORMAL);
     }
 
     @Test
     void meetsOtherCriteria_except_for_number_Then_Normal() {
-        PasswordStrength result = meter.meter("ab!@ABqwer");
-        assertEquals(PasswordStrength.NORMAL, result);
+        assertStrength("ab!@ABqwer", PasswordStrength.NORMAL);
+        assertStrength("ab!@A12Bqwer", PasswordStrength.STRONG);
+    }
 
-        PasswordStrength result2 = meter.meter("ab!@A12Bqwer");
-        assertEquals(PasswordStrength.STRONG, result2);
+    private void assertStrength(String password, PasswordStrength normal) {
+        PasswordStrength result = meter.meter(password);
+        assertEquals(normal, result);
     }
 }
